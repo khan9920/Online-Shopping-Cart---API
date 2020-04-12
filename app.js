@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 // require routes
-const userRoute = require('./routes/userRoute');
+const userRoute = require('./routes/user.route');
 
 // defining api URL
 const apiURL = '/api/v1/';
@@ -16,6 +16,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 // combining api URL with the route to work
-app.use(apiURL + 'users/', userRoute);
+app.use(apiURL + 'users', userRoute);
 
 module.exports = app;
