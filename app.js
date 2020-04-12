@@ -21,3 +21,5 @@ app.use(apiURL + 'users', userRoute);
 app.use( apiURL + 'category', categoryRoute);
 
 module.exports = app;
+
+//https://localhost:3000/api/url/category/:id
