@@ -7,8 +7,6 @@ const userController = require("../controllers/user.controller");
 const userSchema = require("../models/user.schema");
 const validator = require("../services/validator.service");
 
-console.log('user router');
-
 // User creation route
 router
   .route(permissions.createUser.path)
