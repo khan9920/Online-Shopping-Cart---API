@@ -1,4 +1,8 @@
 //databse and port configurations
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4480d3650b06b1d30a109a1a3515a50ad9eb351b
 require('dotenv').config({ path: 'variables.env' });
 
 module.exports = {
