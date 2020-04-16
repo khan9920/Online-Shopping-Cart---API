@@ -51,7 +51,6 @@ module.exports.updateUser = async (req, res) => {
     return response.successWithData(user, res);
   }
   catch (error) {
-    logger.error(error);
     return response.customError(`${error}`, res);
   }
 };
@@ -83,7 +82,6 @@ module.exports.updatePassword = async (req, res) => {
 module.exports.deleteUser = async (req, res) => {
   try {
     await userService.deleteUserById(req.query.id);
-    logger.info("User deleted.");
     return response.successWithMessage("User deleted.", res);
   }
   catch (error) {
@@ -136,22 +134,7 @@ module.exports.getUsers = async (req, res) => {
     return response.successWithData(user, res, recordsTotal, recordsFiltered);
   }
   catch (error) {
-    return response.customError(`${error}`, res);
-  }
-};
-
-/**
- * Get building managers
- * @param req
- * @param res
- * @returns {Promise<*>}
- */
-module.exports.getBuildingManagers = async (req, res) => {
-  try {
-    const data = await userService.getBuildingManagers(req.query);
-    return response.successWithData(data, res);
-  }
-  catch (error) {
+    console.log(error);
     return response.customError(`${error}`, res);
   }
 };

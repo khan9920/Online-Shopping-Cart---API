@@ -49,7 +49,8 @@ router
 router
   .route(permissions.deleteUser.path)
   .delete(
-    validator.validateQueryParameters(userSchema.id, permissions.deleteUser.grantedUserRoles),
+    validator.validateHeader(permissions.deleteUser.grantedUserRoles),
+    validator.validateQueryParameters(userSchema.id),
     userController.deleteUser,
   );
 router
@@ -65,20 +66,6 @@ router
     validator.validateHeader(permissions.getUsersByRoles.grantedUserRoles),
     validator.validateQueryParameters(userSchema.getUsersByRoles),
     userController.getUsers,
-  );
-router
-  .route(permissions.getUsersByParentId.path)
-  .get(
-    validator.validateHeader(permissions.getUsersByParentId.grantedUserRoles),
-    validator.validateQueryParameters(userSchema.getUsersByParentId),
-    userController.getUsers,
-  );
-router
-  .route(permissions.getBuildingManagers.path)
-  .get(
-    validator.validateHeader(permissions.getBuildingManagers.grantedUserRoles),
-    validator.validateQueryParameters(userSchema.getBuildingManagers),
-    userController.getBuildingManagers,
   );
 
 module.exports = router;

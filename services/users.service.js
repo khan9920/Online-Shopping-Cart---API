@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const generatePassword = require("password-generator");
 const userRepository = require("../repository/user.repository");
 const mailer = require("../mail-hub/mailer");
@@ -122,8 +121,7 @@ module.exports.updatePassword = async (body) => {
       await userRepository.save(user);
 
       await mailer.sendPasswordUpdatedNotification(user.email);
-      const success = "Password updated successfully.";
-      return success;
+      return "Password updated successfully.";
     }
 
     const invalidCurrentPassword = "Current password is incorrect.";
@@ -151,8 +149,7 @@ module.exports.resetPassword = async (body) => {
     await userRepository.save(user);
 
     await mailer.resetPassword(user.email, password);
-    const success = "Password reset successfully.";
-    return success;
+    return "Password reset successfully.";
   }
 
   throw new Error("Invalid email.");
@@ -172,16 +169,17 @@ module.exports.getUserById = async (userId) => {
   });
 
   // Populate building id, company id, and building managers
-  return Model.populate(user, [{
-    path: "building_id",
-    select: "-bank_account -nmi_account_name",
-    populate: {
-      path: "managers.user_id",
-      select: "-salt -password",
-    },
-  }, {
-    path: "company_id",
-  }]);
+  // return Model.populate(user, [{
+  //   path: "building_id",
+  //   select: "-bank_account -nmi_account_name",
+  //   populate: {
+  //     path: "managers.user_id",
+  //     select: "-salt -password",
+  //   },
+  // }, {
+  //   path: "company_id",
+  // }]);
+  return user;
 };
 
 /**
@@ -191,7 +189,6 @@ module.exports.getUserById = async (userId) => {
  */
 module.exports.getUsers = async (body) => {
   const { roles } = body;
-  const parentId = body.parent_id;
   const pageNo = +body.page;
   let limit = +body.limit;
   const searchKeyWord = body.search;
@@ -216,52 +213,44 @@ module.exports.getUsers = async (body) => {
   if (roles != null) {
     // Active users
     if (status === config.status.active) {
-      matchQuery = {
+      matchQuery = { // this is what I want
         role: { $in: roles },
         delete_date: null,
       };
     }
     // Deactive users
     else if (status === config.status.deactive) {
-      matchQuery = {
+      matchQuery = { // Want this too
         role: { $in: roles },
         delete_date: { $ne: null },
       };
     }
     // All users
     else if (status === config.status.all) {
-      matchQuery = {
+      matchQuery = { // and this too
         role: { $in: roles },
       };
     }
     // No users
     else {
-      matchQuery = {
+      matchQuery = { // this too
         status: config.status.unavailable,
       };
     }
-  }
-  // Filter users by parent id
-  else if (parentId != null) {
-    matchQuery = {
-      parent_id: mongoose.Types.ObjectId(parentId),
-      delete_date: null,
-    };
   }
 
   const prePaginationQuery = [
     {
       $match: matchQuery,
     },
-    ...queryService.lookUpUnwindCompanies,
-    {
-      $addFields: {
-        first_name_lowercase: { $toLower: "$first_name" },
-        last_name_lowercase: { $toLower: "$last_name" },
-        company_name_lowercase: { $toLower: "$company_id.name" },
-        state_lowercase: { $toLower: "$state" },
-      },
-    },
+    // {
+    //   $addFields: {
+    //     first_name_lowercase: { $toLower: "$first_name" },
+    //     last_name_lowercase: { $toLower: "$last_name" },
+    //     company_name_lowercase: { $toLower: "$company_id.name" },
+    //     state_lowercase: { $toLower: "$state" },
+    //   },
+    // },
   ];
 
   let recordsTotal = await userRepository.findByAggregateQuery([
@@ -281,13 +270,10 @@ module.exports.getUsers = async (body) => {
       { $sort: sortQuery },
       { $skip: pageNo ? (limit * (pageNo - 1)) : 0 },
       { $limit: limit || recordsTotal },
-      ...queryService.lookUpUnwindBuildings,
       {
         $project: {
           password: 0,
           salt: 0,
-          "building_id.nmi_account_name": 0,
-          "building_id.bank_account": 0,
         },
       },
     ]);
@@ -318,13 +304,10 @@ module.exports.getUsers = async (body) => {
       { $sort: sortQuery },
       { $skip: pageNo ? (limit * (pageNo - 1)) : 0 },
       { $limit: limit || recordsTotal },
-      ...queryService.lookUpUnwindBuildings,
       {
         $project: {
           password: 0,
-          salt: 0,
-          "building_id.nmi_account_name": 0,
-          "building_id.bank_account": 0,
+          salt: 0
         },
       },
     ]);
@@ -342,40 +325,6 @@ module.exports.getUsers = async (body) => {
     recordsTotal,
     recordsFiltered,
   };
-};
-
-/**
- * Get building managers
- * @param body
- * @returns {Promise<*[]>}
- */
-module.exports.getBuildingManagers = async (body) => {
-  const { assigned } = body;
-
-  let query = {
-    role: config.userRoles.storeManager,
-    delete_date: null,
-  };
-
-  // BMs unassigned to any building
-  if (assigned === false || assigned === "false") {
-    query = {
-      ...query,
-      building_id: null,
-    };
-  }
-  // Already assigned BMs
-  else if (assigned === true || assigned === "true") {
-    query = {
-      ...query,
-      building_id: { $ne: null },
-    };
-  }
-
-  return userRepository.findMany(query, {
-    salt: 0,
-    password: 0,
-  });
 };
 
 /**
