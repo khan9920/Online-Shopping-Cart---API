@@ -123,20 +123,3 @@ module.exports.getUsersByRoles = joi.object().keys({
     .required(),
   ...paginationConfig.pagination,
 });
-
-module.exports.getUsersByParentId = joi.object().keys({
-  parent_id: joi
-    .string()
-    .alphanum()
-    .min(24)
-    .max(24)
-    .required(),
-  ...paginationConfig.pagination,
-});
-
-module.exports.getBuildingManagers = joi.object().keys({
-  assigned: joi
-    .string()
-    .valid("true", "false", config.status.all)
-    .required(),
-});

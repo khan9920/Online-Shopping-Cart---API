@@ -33,13 +33,5 @@ module.exports.permissions = {
   getUsersByRoles: {
     path: "/roles",
     grantedUserRoles: [userRoles.admin, userRoles.storeManager],
-  },
-  getUsersByParentId: {
-    path: "/parent-id",
-    grantedUserRoles: [userRoles.admin, userRoles.storeManager, userRoles.user],
-  },
-  getBuildingManagers: {
-    path: "/building-managers",
-    grantedUserRoles: [userRoles.admin],
-  },
+  }
 };
