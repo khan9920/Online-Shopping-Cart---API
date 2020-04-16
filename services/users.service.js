@@ -167,18 +167,6 @@ module.exports.getUserById = async (userId) => {
     salt: 0,
     password: 0,
   });
-
-  // Populate building id, company id, and building managers
-  // return Model.populate(user, [{
-  //   path: "building_id",
-  //   select: "-bank_account -nmi_account_name",
-  //   populate: {
-  //     path: "managers.user_id",
-  //     select: "-salt -password",
-  //   },
-  // }, {
-  //   path: "company_id",
-  // }]);
   return user;
 };
 
