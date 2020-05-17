@@ -1,4 +1,5 @@
 //databse and port configurations
+
 require('dotenv').config({ path: 'variables.env' });
 
 module.exports = {
