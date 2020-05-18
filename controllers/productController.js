@@ -64,8 +64,10 @@ exports.addProduct = async (req, res) => {
 // update a product
 exports.updateProduct = async (req, res) => {
 
-    console.log("this is " + req.body.name);
-    req.body.productImage = req.file.path;
+	if (req.file){
+        req.body.productImage = req.file.path;
+    }
+	
     // update user and save to database
     const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, {
 
