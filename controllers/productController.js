@@ -34,23 +34,7 @@ exports.getProduct = async (req, res) => {
 // add a product
 exports.addProduct = async (req, res) => {
 
-    // console.log(req.body);
-    // console.log(req.file);
-    // const product = new Product();
-
-    // product.name = req.body.name;
-    //product.productImage = req.file.path;
-    // product.category = req.body.category;
-    // product.price = req.body.price;
-    // product.discount = req.body.discount;
-    // product.quantity = req.body.quantity;
-    // product.description = req.body.description;
-    // product.createdAt = req.body.createdAt;
-
-    // save to database
-    //await product.save();
     req.body.productImage = req.file.path;
-    console.log(req.body);
     const newProduct = await Product.create(req.body);
 
     // send response along with the added product
@@ -64,7 +48,8 @@ exports.addProduct = async (req, res) => {
 // update a product
 exports.updateProduct = async (req, res) => {
 
-	if (req.file){
+	if (req.file)
+	{
         req.body.productImage = req.file.path;
     }
 	
