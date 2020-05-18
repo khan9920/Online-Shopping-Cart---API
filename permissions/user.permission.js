@@ -4,6 +4,9 @@ module.exports.permissions = {
   createUser: {
     path: "/user",
   },
+  getUserAvailability: {
+    path: '/user-availability'
+  },
   createEmployee: {
     path: "/employee",
     grantedUserRoles: [userRoles.admin]

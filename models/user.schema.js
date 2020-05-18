@@ -29,7 +29,7 @@ module.exports.newUser = joi.object().keys({
     .required(),
   role: joi
     .string()
-    .valid(userRoles.admin, userRoles.storeManager, userRoles.user)
+    .valid(userRoles.admin, userRoles.storeManager)
     .required(),
   first_name: joi
     .string()

@@ -23,7 +23,7 @@ module.exports = {
     });
   },
   customError(message, res) {
-    return res.status(422).json({
+    return res.json({
       status: false,
       msg: message,
     });

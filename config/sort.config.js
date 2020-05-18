@@ -7,7 +7,6 @@ const sortingColumn = {
   users: {
     "-1": "",
     0: "email",
-    1: "company_name_lowercase",
     2: "first_name_lowercase",
     3: "last_name_lowercase",
     4: "role",
