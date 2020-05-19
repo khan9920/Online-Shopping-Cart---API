@@ -29,7 +29,7 @@ module.exports = {
     });
   },
   dataNotFound(message, res) {
-    return res.status(404).json({
+    return res.json({
       status: false,
       msg: message,
     });
