@@ -42,6 +42,19 @@ module.exports.createUser = async (body) => {
   }
 };
 
+module.exports.checkUserAvailability = async (body) => {
+  const user = await this.getUserByEmail(body.email);
+  if (!user) {
+    console.log('no user');
+    return {
+      available: false
+    }
+  }
+  return {
+    available: true
+  };
+}
+
 /**
  * User login
  * @param body
@@ -191,7 +204,6 @@ module.exports.getUserById = async (userId) => {
  */
 module.exports.getUsers = async (body) => {
   const { roles } = body;
-  const parentId = body.parent_id;
   const pageNo = +body.page;
   let limit = +body.limit;
   const searchKeyWord = body.search;
@@ -242,18 +254,17 @@ module.exports.getUsers = async (body) => {
     }
   }
   // Filter users by parent id
-  else if (parentId != null) {
-    matchQuery = {
-      parent_id: mongoose.Types.ObjectId(parentId),
-      delete_date: null,
-    };
-  }
+  // else if (parentId != null) {
+  //   matchQuery = {
+  //     parent_id: mongoose.Types.ObjectId(parentId),
+  //     delete_date: null,
+  //   };
+  // }
 
   const prePaginationQuery = [
     {
       $match: matchQuery,
     },
-    ...queryService.lookUpUnwindCompanies,
     {
       $addFields: {
         first_name_lowercase: { $toLower: "$first_name" },
@@ -281,7 +292,6 @@ module.exports.getUsers = async (body) => {
       { $sort: sortQuery },
       { $skip: pageNo ? (limit * (pageNo - 1)) : 0 },
       { $limit: limit || recordsTotal },
-      ...queryService.lookUpUnwindBuildings,
       {
         $project: {
           password: 0,
@@ -302,7 +312,6 @@ module.exports.getUsers = async (body) => {
         $match: {
           $or: [
             { email: { $regex: searchKeyWord, $options: "i" } },
-            { "company_id.name": { $regex: searchKeyWord, $options: "i" } },
             { first_name: { $regex: searchKeyWord, $options: "i" } },
             { last_name: { $regex: searchKeyWord, $options: "i" } },
             { role: { $regex: searchKeyWord, $options: "i" } },
@@ -318,7 +327,6 @@ module.exports.getUsers = async (body) => {
       { $sort: sortQuery },
       { $skip: pageNo ? (limit * (pageNo - 1)) : 0 },
       { $limit: limit || recordsTotal },
-      ...queryService.lookUpUnwindBuildings,
       {
         $project: {
           password: 0,
