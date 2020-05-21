@@ -50,18 +50,6 @@ exports.getFilteredProducts = async (req, res) => {
 // add a product
 exports.addProduct = async (req, res) => {
 
-    // console.log(req.body);
-    // console.log(req.file);
-    // const product = new Product();
-
-    // product.name = req.body.name;
-    //product.productImage = req.file.path;
-    // product.category = req.body.category;
-    // product.price = req.body.price;
-    // product.discount = req.body.discount;
-    // product.quantity = req.body.quantity;
-    // product.description = req.body.description;
-    // product.createdAt = req.body.createdAt;
 
     // save to database
     //await product.save();
