@@ -9,6 +9,8 @@ const categoryRoute = require('./routes/category.route');
 const paymentRoute = require('./routes/payment.route');
 const productRoute = require('./routes/productRoute');
 const cartRoute = require('./routes/cartRoute');
+const wishlist = require('./routes/wishlistRoute');
+
 // defining api URL
 const apiURL = '/api/v1/';
 
@@ -40,6 +42,7 @@ app.use(apiURL + 'category', categoryRoute);
 app.use(apiURL + 'payment', paymentRoute);
 app.use(apiURL + 'products', productRoute);
 app.use(apiURL + 'carts', cartRoute);
+app.use(apiURL + 'wishlist', wishlist);
 
 module.exports = app;
 
