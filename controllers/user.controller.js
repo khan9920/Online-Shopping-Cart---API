@@ -20,6 +20,17 @@ module.exports.createUser = async (req, res) => {
   }
 };
 
+module.exports.checkUserAvailability = async (req, res) => {
+  try {
+    // loggerService.initializeLogContentWhenJwtIsAbsent(req);
+
+    const user = await userService.checkUserAvailability(req.query);
+    return response.successWithData(user, res);
+  }
+  catch (error) {
+    return response.customError(`${error}`, res);
+  }
+};
 /**
  * Login to the system
  * @param req
@@ -123,7 +134,7 @@ module.exports.getUsers = async (req, res) => {
     if (req.query.id != null) {
       user = await userService.getUserById(req.query.id);
     }
-    else if ((req.query.roles != null && req.query.roles.length !== 0) || req.query.parent_id != null) {
+    else if ((req.query.roles != null && req.query.roles.length !== 0)) {
       const data = await userService.getUsers(req.query);
       user = data.users;
       recordsTotal = data.recordsTotal;
@@ -136,6 +147,7 @@ module.exports.getUsers = async (req, res) => {
     return response.successWithData(user, res, recordsTotal, recordsFiltered);
   }
   catch (error) {
+    console.log(error);
     return response.customError(`${error}`, res);
   }
 };

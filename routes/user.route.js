@@ -15,6 +15,13 @@ router
     userController.createUser,
   );
 
+router
+  .route(permissions.getUserAvailability.path)
+  .get(
+    validator.validateQueryParameters(userSchema.email),
+    userController.checkUserAvailability
+  )
+
 // Employee creation route
 router
   .route(permissions.createEmployee.path)
