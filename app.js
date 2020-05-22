@@ -10,6 +10,7 @@ const paymentRoute = require('./routes/payment.route');
 const productRoute = require('./routes/productRoute');
 const cartRoute = require('./routes/cartRoute');
 const wishlist = require('./routes/wishlistRoute');
+const reviewRoute = require('./routes/reviewRoute');
 
 // defining api URL
 const apiURL = '/api/v1/';
@@ -43,6 +44,7 @@ app.use(apiURL + 'payment', paymentRoute);
 app.use(apiURL + 'products', productRoute);
 app.use(apiURL + 'carts', cartRoute);
 app.use(apiURL + 'wishlist', wishlist);
+app.use(apiURL + 'review', reviewRoute);
 
 module.exports = app;
 

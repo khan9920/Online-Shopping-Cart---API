@@ -38,7 +38,8 @@ const productSchema = mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    reviews: []
 });
 
 module.exports = mongoose.model('Product', productSchema);
