@@ -1,7 +1,7 @@
 //import file system
 const fs = require('fs');
 const Product = require("./../models/Product");
-
+const User = require('./../models/user.model');
 
 // get all products
 exports.getAllProducts = async (req, res) => {
@@ -102,4 +102,14 @@ exports.deleteProduct = async (req, res) => {
         message: 'Success',
         data: null
     });
+}
+
+
+exports.getUser = async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    res.status(200).json({
+        status: 'success',
+        user
+    })
 }

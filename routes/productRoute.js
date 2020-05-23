@@ -17,4 +17,6 @@ router.patch('/:id', fileUpload.single('productImage'), productController.update
 //router.route('/:id').patch(productController.updateProduct);  // rout to EDIT PRODUCTS
 router.route('/:id').delete(productController.deleteProduct); // rout to DELETE PRODUCTS
 
+router.route('/getuser/:id').get(productController.getUser);
+
 module.exports = router;

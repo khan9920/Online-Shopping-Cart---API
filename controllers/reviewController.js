@@ -22,8 +22,6 @@ exports.addReview = async (req, res) => {
 }
 
 exports.getReviews = async (req, res) => {
-
-
     const product = await Product.find({ _id: req.params.id });
     const reviews = JSON.parse(JSON.stringify(product[0].reviews))
 
