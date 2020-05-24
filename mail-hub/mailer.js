@@ -32,7 +32,7 @@ module.exports.sendNewAccountCreated = async (receiver, username) => {
 };
 
 module.exports.sendPasswordUpdatedNotification = async (receiver) => {
-  const mailSubject = "[[Name]] Account Password Changed";
+  const mailSubject = "Online store Account Password Changed";
   return setConfigurationsAndSendEmail(
     receiver,
     mailSubject,
@@ -41,7 +41,7 @@ module.exports.sendPasswordUpdatedNotification = async (receiver) => {
 };
 
 module.exports.resetPassword = async (receiver, password) => {
-  const mailSubject = "Yeager Account Password Reset";
+  const mailSubject = "Online store Account Password Reset";
   return setConfigurationsAndSendEmail(
     receiver,
     mailSubject,

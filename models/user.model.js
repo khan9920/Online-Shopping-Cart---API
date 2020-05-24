@@ -13,7 +13,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      required: true
+      default: "User"
     },
     password: {
       type: String,
@@ -36,6 +36,10 @@ const userSchema = new Schema(
     salt: {
       type: String,
       required: true,
+    },
+    forgot_password: {
+      type: String,
+      default: false
     },
     key_fobs: Array,
     delete_date: Date,

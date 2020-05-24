@@ -15,6 +15,13 @@ router
     userController.createUser,
   );
 
+router
+  .route(permissions.getUserAvailability.path)
+  .get(
+    validator.validateQueryParameters(userSchema.email),
+    userController.checkUserAvailability
+  )
+
 // Employee creation route
 router
   .route(permissions.createEmployee.path)
@@ -37,7 +44,7 @@ router
 router
   .route(permissions.updatePassword.path)
   .put(
-    validator.validateBodyWithToken(userSchema.updatePassword, permissions.updatePassword.grantedUserRoles),
+    validator.validateBody(userSchema.updatePassword),
     userController.updatePassword,
   );
 router
@@ -55,7 +62,7 @@ router
 router
   .route(permissions.getUserById.path)
   .get(
-    validator.validateHeader(permissions.getUserById.grantedUserRoles),
+    // validator.validateHeader(permissions.getUserById.grantedUserRoles),
     validator.validateQueryParameters(userSchema.getUserById),
     userController.getUsers,
   );

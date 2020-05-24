@@ -5,6 +5,8 @@ const mailer = require("../mail-hub/mailer");
 const commonService = require("../services/common.service");
 const Model = require("../models/user.model");
 const config = require("../config/config");
+const cartController = require('../controllers/cartController');
+const wishListController = require('../controllers/wishlistController');
 const sortingConfig = require("../config/sort.config");
 
 /**
@@ -28,6 +30,18 @@ module.exports.createUser = async (body) => {
       newUser = newUser.toObject();
       delete newUser.password;
       delete newUser.salt;
+      cartController.createCartMethod({user_ID: newUser._id}).then(data => {
+        console.log(data);
+        if (data.status) {
+          console.log('cart created');
+        }
+      });
+      wishListController.createWishListMethod({user_ID: newUser._id}).then(data => {
+        console.log('Wish list Created');
+      })
+        .catch( () => {
+          console.log('Wish list Creation Failed');
+      })
       return newUser;
     }
     catch (error) {
@@ -41,6 +55,19 @@ module.exports.createUser = async (body) => {
     throw new Error("Email already exists.");
   }
 };
+
+module.exports.checkUserAvailability = async (body) => {
+  const user = await this.getUserByEmail(body.email);
+  if (!user) {
+    console.log('no user');
+    return {
+      available: false
+    }
+  }
+  return {
+    available: true
+  };
+}
 
 /**
  * User login
@@ -61,6 +88,7 @@ module.exports.login = async (body) => {
         _id: user._id,
         email: user.email,
         role: user.role,
+        is_forgot_pass: user.forgot_password
       };
     }
 
@@ -117,7 +145,7 @@ module.exports.updatePassword = async (body) => {
     if (passwordValidity === true) {
 
       user.setPassword(body.newPassword);
-      user.is_first_time = false;
+      user.forgot_password = false;
 
       await userRepository.save(user);
 
@@ -147,6 +175,7 @@ module.exports.resetPassword = async (body) => {
   if (user != null) {
     const password = generatePassword(8, false);
     user.setPassword(password);
+    user.forgot_password = true;
 
     await userRepository.save(user);
 
@@ -191,7 +220,6 @@ module.exports.getUserById = async (userId) => {
  */
 module.exports.getUsers = async (body) => {
   const { roles } = body;
-  const parentId = body.parent_id;
   const pageNo = +body.page;
   let limit = +body.limit;
   const searchKeyWord = body.search;
@@ -242,18 +270,17 @@ module.exports.getUsers = async (body) => {
     }
   }
   // Filter users by parent id
-  else if (parentId != null) {
-    matchQuery = {
-      parent_id: mongoose.Types.ObjectId(parentId),
-      delete_date: null,
-    };
-  }
+  // else if (parentId != null) {
+  //   matchQuery = {
+  //     parent_id: mongoose.Types.ObjectId(parentId),
+  //     delete_date: null,
+  //   };
+  // }
 
   const prePaginationQuery = [
     {
       $match: matchQuery,
     },
-    ...queryService.lookUpUnwindCompanies,
     {
       $addFields: {
         first_name_lowercase: { $toLower: "$first_name" },
@@ -281,7 +308,6 @@ module.exports.getUsers = async (body) => {
       { $sort: sortQuery },
       { $skip: pageNo ? (limit * (pageNo - 1)) : 0 },
       { $limit: limit || recordsTotal },
-      ...queryService.lookUpUnwindBuildings,
       {
         $project: {
           password: 0,
@@ -302,7 +328,6 @@ module.exports.getUsers = async (body) => {
         $match: {
           $or: [
             { email: { $regex: searchKeyWord, $options: "i" } },
-            { "company_id.name": { $regex: searchKeyWord, $options: "i" } },
             { first_name: { $regex: searchKeyWord, $options: "i" } },
             { last_name: { $regex: searchKeyWord, $options: "i" } },
             { role: { $regex: searchKeyWord, $options: "i" } },
@@ -318,7 +343,6 @@ module.exports.getUsers = async (body) => {
       { $sort: sortQuery },
       { $skip: pageNo ? (limit * (pageNo - 1)) : 0 },
       { $limit: limit || recordsTotal },
-      ...queryService.lookUpUnwindBuildings,
       {
         $project: {
           password: 0,
