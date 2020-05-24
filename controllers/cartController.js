@@ -11,6 +11,13 @@ exports.getCarts = async (req, res) => {
     });
 }
 
+exports.createCartMethod = async (body) => {
+    const newCart = await Cart.create(body);
+    return {
+        status: true
+    };
+}
+
 exports.createCart = async (req, res) => {
     const newCart = await Cart.create(req.body);
 

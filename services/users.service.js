@@ -5,6 +5,8 @@ const mailer = require("../mail-hub/mailer");
 const commonService = require("../services/common.service");
 const Model = require("../models/user.model");
 const config = require("../config/config");
+const cartController = require('../controllers/cartController');
+const wishListController = require('../controllers/wishlistController');
 const sortingConfig = require("../config/sort.config");
 
 /**
@@ -28,6 +30,18 @@ module.exports.createUser = async (body) => {
       newUser = newUser.toObject();
       delete newUser.password;
       delete newUser.salt;
+      cartController.createCartMethod({user_ID: newUser._id}).then(data => {
+        console.log(data);
+        if (data.status) {
+          console.log('cart created');
+        }
+      });
+      wishListController.createWishListMethod({user_ID: newUser._id}).then(data => {
+        console.log('Wish list Created');
+      })
+        .catch( () => {
+          console.log('Wish list Creation Failed');
+      })
       return newUser;
     }
     catch (error) {

@@ -16,6 +16,7 @@ module.exports.createUser = async (req, res) => {
     return response.successWithDataAndToken(user, res);
   }
   catch (error) {
+    console.log(error);
     return response.customError(`${error}`, res);
   }
 };

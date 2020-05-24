@@ -11,6 +11,20 @@ exports.getWishLists = async (req, res) => {
     });
 }
 
+exports.createWishListMethod = async (body) => {
+    try {
+        const newWishLIst = await WishList.create(body);
+        console.log(newWishLIst);
+        return {
+            status: true
+        }
+    } catch (error) {
+        return {
+            status: false
+        }
+    }
+}
+
 exports.createWishList = async (req, res) => {
     const newWishLIst = await WishList.create(req.body);
 
