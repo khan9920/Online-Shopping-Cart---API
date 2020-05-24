@@ -62,7 +62,7 @@ router
 router
   .route(permissions.getUserById.path)
   .get(
-    validator.validateHeader(permissions.getUserById.grantedUserRoles),
+    // validator.validateHeader(permissions.getUserById.grantedUserRoles),
     validator.validateQueryParameters(userSchema.getUserById),
     userController.getUsers,
   );

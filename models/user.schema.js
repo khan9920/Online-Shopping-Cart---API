@@ -75,6 +75,9 @@ module.exports.updateUser = joi.object().keys({
     .trim()
     .alphanum()
     .min(1),
+  role: joi
+    .string()
+    .valid(userRoles.admin, userRoles.storeManager, userRoles.user),
   last_name: joi
     .string()
     .trim()

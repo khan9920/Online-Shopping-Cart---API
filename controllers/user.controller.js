@@ -94,7 +94,6 @@ module.exports.updatePassword = async (req, res) => {
 module.exports.deleteUser = async (req, res) => {
   try {
     await userService.deleteUserById(req.query.id);
-    logger.info("User deleted.");
     return response.successWithMessage("User deleted.", res);
   }
   catch (error) {
