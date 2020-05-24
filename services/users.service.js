@@ -74,6 +74,7 @@ module.exports.login = async (body) => {
         _id: user._id,
         email: user.email,
         role: user.role,
+        is_forgot_pass: user.forgot_password
       };
     }
 
@@ -130,7 +131,7 @@ module.exports.updatePassword = async (body) => {
     if (passwordValidity === true) {
 
       user.setPassword(body.newPassword);
-      user.is_first_time = false;
+      user.forgot_password = false;
 
       await userRepository.save(user);
 
@@ -160,6 +161,7 @@ module.exports.resetPassword = async (body) => {
   if (user != null) {
     const password = generatePassword(8, false);
     user.setPassword(password);
+    user.forgot_password = true;
 
     await userRepository.save(user);
 

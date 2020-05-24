@@ -44,7 +44,7 @@ router
 router
   .route(permissions.updatePassword.path)
   .put(
-    validator.validateBodyWithToken(userSchema.updatePassword, permissions.updatePassword.grantedUserRoles),
+    validator.validateBody(userSchema.updatePassword),
     userController.updatePassword,
   );
 router

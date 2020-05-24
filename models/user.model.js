@@ -37,6 +37,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    forgot_password: {
+      type: String,
+      default: false
+    },
     key_fobs: Array,
     delete_date: Date,
   },
